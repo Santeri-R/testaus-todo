@@ -29,10 +29,27 @@ jobs:
         run: npm test
 
       - name: Run end-to-end tests
-        uses: cypress-io/github-action@v6
-        with:
-          install: false
-          start: npm start
-          wait-on: http://localhost:5173/health
-          wait-on-timeout: 120
-          command: npm run test:e2e
+        run: |
+          npm start > server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:5173/health; then
+              echo
+              npm run test:e2e
+              exit $?
+            fi
+
+            if ! kill -0 "$server_pid" 2>/dev/null; then
+              cat server.log
+              echo "The app server exited before becoming ready."
+              exit 1
+            fi
+
+            sleep 1
+          done
+
+          cat server.log
+          echo "The app server did not become ready within 30 seconds."
+          exit 1

@@ -12,7 +12,7 @@ describe('Todo app', () => {
   });
 
   it('loads the Todo app locally', () => {
-    cy.location('origin').should('eq', 'http://localhost:5173');
+    cy.location('origin').should('eq', 'http://127.0.0.1:5173');
     cy.contains('h1', 'Basic CRUD ToDo web app').should('be.visible');
     cy.get('#task-form').should('be.visible');
   });
