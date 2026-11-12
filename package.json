@@ -8,7 +8,8 @@
     "start": "node server.js",
     "dev": "node server.js",
     "test": "cross-env NODE_OPTIONS=--no-experimental-webstorage vitest run",
-    "test:watch": "cross-env NODE_OPTIONS=--no-experimental-webstorage vitest"
+    "test:watch": "cross-env NODE_OPTIONS=--no-experimental-webstorage vitest",
+    "test:e2e": "cypress run"
   },
   "engines": {
     "node": ">=18"
